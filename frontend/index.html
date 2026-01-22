@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Notes (K8s)</title>
+  <style>
+    body{font-family:system-ui,Arial;margin:30px;max-width:720px}
+    input{width:100%;padding:10px;font-size:16px}
+    button{padding:10px 14px;font-size:16px;margin-top:10px;cursor:pointer}
+    ul{padding-left:18px}
+    li{margin:8px 0}
+    .muted{color:#666;font-size:13px}
+  </style>
+</head>
+<body>
+  <h1>Notes</h1>
+  <p class="muted">Frontend → Backend API → Postgres (Kubernetes)</p>
+
+  <input id="note" placeholder="Напиши бележка..." />
+  <button onclick="addNote()">Добави</button>
+
+  <h2>Списък</h2>
+  <ul id="list"></ul>
+
+<script>
+  // В Kubernetes ще го override-нем с ConfigMap (env.js)
+  window.API_BASE = window.API_BASE || "http://localhost:30080";
+
+  async function loadNotes(){
+    const res = await fetch(`${window.API_BASE}/notes`);
+    const data = await res.json();
+    const ul = document.getElementById('list');
+    ul.innerHTML = '';
+    data.forEach(n=>{
+      const li = document.createElement('li');
+      li.textContent = `#${n.id}: ${n.content}`;
+      ul.appendChild(li);
+    });
+  }
+
+  async function addNote(){
+    const input = document.getElementById('note');
+    const content = input.value.trim();
+    if(!content) return;
+
+    await fetch(`${window.API_BASE}/notes`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({content})
+    });
+    input.value = '';
+    await loadNotes();
+  }
+
+  loadNotes();
+</script>
+</body>
+</html>
