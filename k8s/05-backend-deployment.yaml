@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ivangenov/notes-backend:v1
+          image: ivangenov/notes-backend:v2
           ports:
             - containerPort: 8000
           envFrom:

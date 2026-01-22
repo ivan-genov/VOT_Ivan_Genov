@@ -5,4 +5,4 @@ metadata:
   namespace: notes
 data:
   env.js: |
-    window.API_BASE = "http://localhost:30080";
+    window.API_BASE = "http://localhost:8080";

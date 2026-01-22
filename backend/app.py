@@ -46,6 +46,7 @@ def health():
 
 @app.get("/notes")
 def list_notes():
+    init_db()
     conn = get_conn()
     with conn:
         with conn.cursor() as cur:
@@ -59,6 +60,7 @@ def list_notes():
 
 @app.post("/notes")
 def add_note():
+    init_db()
     data = request.get_json(silent=True) or {}
     content = (data.get("content") or "").strip()
     if not content:
